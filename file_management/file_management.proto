@@ -1,0 +1,49 @@
+syntax = "proto3";
+
+option go_package = "./file_management";
+
+// Define the file service with upload, download, delete, and rename operations.
+service FileService {
+  rpc UploadFile(stream FileChunk) returns (Response);
+  rpc DownloadFile(FileRequest) returns (stream FileChunk);
+  rpc DeleteFile(FileRequest) returns (Response);
+  rpc RenameFile(RenameRequest) returns (Response);
+  rpc ListFiles (Empty) returns (FileList);
+}
+
+// Request for file download and delete operations.
+message FileRequest {
+  string file_name = 1;
+}
+
+// Request for file renaming operation.
+message RenameRequest {
+  string old_file_name = 1;
+  string new_file_name = 2;
+}
+
+// Request for file upload operation.
+message FileChunk {
+  bytes data = 1;
+}
+
+// Response for all file operations.
+message Response {
+  string message = 1;
+}
+
+// Message encapsulating the file name.
+message FileNameMessage {
+  string file_name = 1;
+}
+
+message Empty {}
+
+message FileList {
+  repeated FileInfo files = 1;
+}
+
+message FileInfo {
+  string file_name = 1;
+  int64 modification_time = 2;
+}
